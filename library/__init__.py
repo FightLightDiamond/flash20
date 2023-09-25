@@ -19,13 +19,13 @@ def create_db():
 
 def createApp():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@127.0.0.1:3306/python'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:music@mysql:3306/music'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
+    app.config['FLASK_APP'] = 'app'
     db.init_app(app)
     # ma.init_app(app)
     # Create DB
-    create_db()
+    # create_db()
     # Register Model
     app.register_blueprint(books)
     app.register_blueprint(students)

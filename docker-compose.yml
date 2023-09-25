@@ -1,0 +1,36 @@
+version: '3'
+
+networks:
+  music:
+    driver: bridge
+
+services:
+  web:
+#    image: "python:3.11"
+    build:
+      context: .  # Thư mục chứa Dockerfile
+    ports:
+      - "5000:5000"  # Cổng host:container
+    volumes:
+      - .:/www  # Mount ứng dụng Flask vào container
+    environment:
+#      - FLASK_APP=app.py  # Tên tệp ứng dụng Flask
+      - FLASK_ENV=development  # Chế độ môi trường (development/production)
+#    command: cd /www && flask run --debugger --reload  # Lệnh chạy ứng dụng
+    depends_on:
+      - mysql
+  mysql:
+    image: "mysql:latest"
+    hostname: mysql
+    restart: always
+    networks:
+      - music
+    environment:
+      - MYSQL_ROOT_PASSWORD=music
+      - MYSQL_DATABASE=music
+      - MYSQL_USERNAME=music
+      - MYSQL_PASSWORD=music
+    ports:
+      - '33066:3306'
+    cap_add:
+      - SYS_NICE
