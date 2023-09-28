@@ -1,4 +1,4 @@
-from .extension import db
+from library import db
 
 
 class Students(db.Model):

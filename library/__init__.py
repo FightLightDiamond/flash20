@@ -2,34 +2,54 @@ import os
 
 import flask
 from flask import Flask
+from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
-from .books.controller import books
-from .students.controller import students
-from .extension import db, ma
-from .model import Students
+app = Flask(__name__)
+load_dotenv()
 
-def create_db():
-    if not os.path.exists('library/library.db'):
-        # with app.app_context():
-        db.create_all()
-        print("Created DB!")
-    else:
-        print('Can not create db')
+# Sử dụng biến môi trường trong ứng dụng
+app.secret_key = os.getenv("SECRET_KEY")
+app.debug = os.getenv("DEBUG")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
+
+db = SQLAlchemy(app)
 
 
 def createApp():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:music@mysql:3306/music'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['FLASK_APP'] = 'app'
+    # Tải biến môi trường từ tệp .env
+
     db.init_app(app)
     # ma.init_app(app)
+
     # Create DB
-    # create_db()
+    # with app.app_context():
+
+    db.create_all()
+
     # Register Model
-    app.register_blueprint(books)
-    app.register_blueprint(students)
+    # app.register_blueprint(books)
+    # app.register_blueprint(students)
 
     print('Flask version: ' + flask.__version__)
 
     return app
+
+# class Students(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(120), nullable=False)
+#     birthday = db.Column(db.Date)
+#     gender = db.Column(db.String(10))
+#     class_name = db.Column(db.String(10))
+#
+#     # borrows = db.relationship('Borrows', backref='borrow', lazy=True)
+#
+#     def __init__(self, name, birthday, gender, class_name):
+#         self.name = name
+#         self.birthday = birthday
+#         self.gender = gender
+#         self.class_name = class_name
+#
+#     def __repr__(self):
+#         return '<Students %r>' % self.name

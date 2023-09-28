@@ -1,11 +1,15 @@
 # Sử dụng hình ảnh Python 3.11
 FROM python:3.11
 
+
+
 # Đặt thư mục làm việc
 WORKDIR /www
 
 # Sao chép tệp requirements.txt vào container
 COPY requirements.txt requirements.txt
+
+RUN pip install mysqlclient
 
 # Cài đặt Flask và các dependencies
 RUN pip install -r requirements.txt
