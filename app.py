@@ -1,13 +1,42 @@
-# from flask_sqlalchemy import SQLAlchemy
+import os
+from datetime import datetime
 
-from library import createApp
+from dotenv import load_dotenv
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-app = createApp()
+load_dotenv()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
+
+print(app.config)
+
+db = SQLAlchemy(app)
 
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    email = db.Column(db.String(100), unique=True)
+    date_joined = db.Column(db.Date, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<User: {self.email}>'
+
+
+class Owner(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    address = db.Column(db.String(50))
+    pets = db.relationship('Pet', backref='owner')
+
+
+class Pet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    age = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
 
 
 if __name__ in "__main__":
