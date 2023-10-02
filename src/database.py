@@ -5,18 +5,48 @@ import random
 
 db = SQLAlchemy()
 
+user_channel = db.Table('user_channel',
+                        db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+                        db.Column('channel_id', db.Integer, db.ForeignKey('channel.id')),
+                        )
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.Text(), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
+    name = db.Column(db.String(50))
+    email = db.Column(db.String(100), unique=True)
+    date_joined = db.Column(db.Date, default=datetime.utcnow)
+    following = db.relationship('Channel', secondary=user_channel, backref='followers')
+    # username = db.Column(db.String(80), unique=True, nullable=False)
+    # password = db.Column(db.Text(), nullable=False)
+    # created_at = db.Column(db.DateTime, default=datetime.now())
+    # updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     bookmarks = db.relationship('Bookmark', backref="user")
 
-    def __repr__(self) -> str:
-        return 'User>>> {self.username}'
+    def __repr__(self):
+        return f'<User: {self.email}>'
+
+
+class Owner(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    address = db.Column(db.String(50))
+    pets = db.relationship('Pet', backref='owner')
+
+
+class Pet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    age = db.Column(db.Integer)
+    owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+
+
+class Channel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+
+    def __repr__(self):
+        return f'<Channel: {self.name}>'
 
 
 class Bookmark(db.Model):

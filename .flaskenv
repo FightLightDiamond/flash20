@@ -1,4 +1,5 @@
-export FLASK_ENV=development
-export FLASK_APP=src
-export SQLALCHEMY_DB_URI=sqlite:///bookmarks.db
-export JWT_SECRET_KEY='JWT_SECRET_KEY'
+FLASK_ENV=development
+FLASK_APP=src
+SQLALCHEMY_DB_URI=mysql://root:music@db:3306/music
+JWT_JWT_SECRET_KEY='JWT_JWT_SECRET_KEY'
+SQLALCHEMY_TRACK_MODIFICATIONS=False

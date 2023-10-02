@@ -9,9 +9,9 @@ app = Flask(__name__)
 load_dotenv()
 
 # Sử dụng biến môi trường trong ứng dụng
-app.secret_key = os.getenv("SECRET_KEY")
+app.JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 app.debug = os.getenv("DEBUG")
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DB_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS")
 
 db = SQLAlchemy(app)
