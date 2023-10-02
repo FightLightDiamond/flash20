@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv("SQLALCHEMY_TRACK_MODIF
 app.config['SQLALCHEMY_ECHO'] = True
 FLASKY_SLOW_DB_QUERY_TIME = 0.5
 db = SQLAlchemy(app)
-
+# db.create_all()
 
 @app.get('/')
 def index():
